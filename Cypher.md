@@ -174,6 +174,29 @@ Learn how to update the graph using Cypher and the Movies example dataset. You w
   -   Perform conditional MERGE processing, depending on what is in the graph.
   -   Delete nodes and relationships from the graph.
 
+**Creating nodes** - Cypher code to create nodes in the graph.
+  - We use the MERGE keyword to create a pattern in the database.
+  - We specify the pattern that we want to create. Usually this will be a single node or a relationship between two nodes.
+
+  ```
+  #  we want to create a node to represent Michael Caine.
+  MERGE (p:Person {name: 'Michael Caine'})
+
+  # Note that when you use MERGE to create a node, you must specify at least one property that will be the unique primary key for the node.
+
+  # This code creates two nodes, each with a primary key property.
+  
+  MERGE (p:Person {name: 'Katie Holmes'})
+  MERGE (m:Movie {title: 'The Dark Knight'})
+  RETURN p, m
+```
+Using CREATE instead of MERGE to create nodes - The benefit of using CREATE is that it does not look up the primary key before adding the node. You can use CREATE if you are sure your data is clean and you want greater speed during import. We use MERGE in this training because it eliminates duplication of nodes.
+
+
+
+
+
+
 
 
 
