@@ -220,7 +220,32 @@ MERGE (p:Person {name: 'Emily Blunt'})-[:ACTED_IN]->(m:Movie {title: 'A Quiet Pl
 RETURN p, m
 ```
 
-**Updating Properties** - There are two ways that you can set a property for a node or relationship.
+**Adding properties for a node or relationship** - There are two ways that you can set a property for a node or relationship.
+  - 1. Inline as part of the MERGE clause - You can also set a property for a relationship inline as follows:
+       ```
+       # In this code, the actor, Michael Caine exists but the movie, Batman Begins does not. We find the Person node and we create the Movie node.
+       MERGE (p:Person {name: 'Michael Caine'})
+       MERGE (m:Movie {title: 'Batman Begins'})
+       MERGE (p)-[:ACTED_IN {roles: ['Alfred Penny']}]->(m)
+       RETURN p,m
+       ```
+  - 2. Using the SET keyword for a reference to a node or relationship -
+       ```
+       MATCH (p:Person)-[r:ACTED_IN]->(m:Movie)
+       WHERE p.name = 'Michael Caine' AND m.title = 'The Dark Knight'
+       SET r.roles = ['Alfred Penny']
+       RETURN p, r, m
+       ```
+
+  Setting multiple properties - If you need to set multiple properties, you separate them with a comma (,). For example:
+  ```
+  MATCH (p:Person)-[r:ACTED_IN]->(m:Movie)
+  WHERE p.name = 'Michael Caine' AND m.title = 'The Dark Knight'
+  SET r.roles = ['Alfred Penny'], r.year = 2008
+  RETURN p, r, m
+  ```
+**Updating Properties**
+       
 
 
 
