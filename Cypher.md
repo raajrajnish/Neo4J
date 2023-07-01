@@ -192,6 +192,42 @@ Learn how to update the graph using Cypher and the Movies example dataset. You w
 ```
 Using CREATE instead of MERGE to create nodes - The benefit of using CREATE is that it does not look up the primary key before adding the node. You can use CREATE if you are sure your data is clean and you want greater speed during import. We use MERGE in this training because it eliminates duplication of nodes.
 
+**Creating Relationships** - learn how to write Cypher clauses to create relationships between existing nodes in the graph.you use MERGE to create relationships between two nodes. When you create a relationship between two nodes, it must have:
+  - Type
+  - Direction
+```
+MATCH (p:Person {name: 'Michael Caine'})
+MATCH (m:Movie {title: 'The Dark Knight'})
+MERGE (p)-[:ACTED_IN]->(m)
+
+# confirm that this relationship exists as follows
+# Notice also that you need not specify direction in the MATCH pattern since the query engine will look for all nodes that are connected,
+# regardless of the direction of the relationship.
+MATCH (p:Person {name: 'Michael Caine'})-[:ACTED_IN]-(m:Movie {title: 'The Dark Knight'})
+RETURN p, m
+```
+**Creating nodes and relationships using multiple clauses**
+```
+MERGE (p:Person {name: 'Chadwick Boseman'})
+MERGE (m:Movie {title: 'Black Panther'})
+MERGE (p)-[:ACTED_IN]-(m)
+
+# Note that in this MERGE clause where we create the relationships, we did not specify the direction of the relationship. By default, if you do not specify the direction when you create the relationship, it will always be assumed left-to-right.
+```
+**Using MERGE to create nodes and a relationship in single clause**
+```
+MERGE (p:Person {name: 'Emily Blunt'})-[:ACTED_IN]->(m:Movie {title: 'A Quiet Place'})
+RETURN p, m
+```
+
+**Updating Properties** - There are two ways that you can set a property for a node or relationship.
+
+
+
+
+
+
+
 
 
 
