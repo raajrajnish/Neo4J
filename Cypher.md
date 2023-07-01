@@ -90,6 +90,81 @@ MATCH (p:Person {name: 'Tom Hanks'})-[:ACTED_IN]->(m:Movie)
 RETURN m.title
 ```
 
+**Filtering Queries**
+
+this query retrieves the Person nodes and Movie nodes where the person acted in a movie that was released in 2008 or 2009:
+```
+MATCH (p:Person)-[:ACTED_IN]->(m:Movie)
+WHERE m.released = 2008 OR m.released = 2009
+RETURN p, m
+```
+
+  - **Filtering by node labels** It returns the names of all people who acted in the movie, The Matrix.
+    ```
+    MATCH (p:Person)-[:ACTED_IN]->(m:Movie)
+    WHERE m.title='The Matrix'
+    RETURN p.name
+    
+    or
+    
+    MATCH (p)-[:ACTED_IN]->(m)
+    WHERE p:Person AND m:Movie AND m.title='The Matrix'
+    RETURN p.name
+    ```
+  - **Filtering using ranges** Here we want to retrieve Person nodes of people who acted in movies released between 2000 and 2003.
+    ```
+    MATCH (p:Person)-[:ACTED_IN]->(m:Movie)
+    WHERE 2000 <= m.released <= 2003
+    RETURN p.name, m.title, m.released
+    ```
+- **Filtering by existence of a property** we only want to return Movie nodes where Jack Nicholson acted in the movie, and the movie has the tagline property.
+  ```
+  MATCH (p:Person)-[:ACTED_IN]->(m:Movie)
+  WHERE p.name='Jack Nicholson' AND m.tagline IS NOT NULL
+  RETURN m.title, m.tagline
+  ```
+- **Filtering by partial strings** You can specify STARTS WITH, ENDS WITH, and CONTAINS.
+  ```
+  MATCH (p:Person)-[:ACTED_IN]->()
+  WHERE p.name STARTS WITH 'Michael'
+  RETURN p.name
+
+  or
+  String tests are case-sensitive so you may need to use the toLower() or toUpper() functions to ensure the test yields the correct results.
+
+  MATCH (p:Person)-[:ACTED_IN]->()
+  WHERE toLower(p.name) STARTS WITH 'michael'
+  RETURN p.name
+  ```
+- **Filtering by patterns in the graph** find all people who wrote a movie but did not direct that same movie.
+  ```
+  MATCH (p:Person)-[:WROTE]->(m:Movie)
+  WHERE NOT exists( (p)-[:DIRECTED]->(m) )
+  RETURN p.name, m.title
+  ```
+- **Filtering using lists** You can define the list in the WHERE clause. During the query, the graph engine will compare each property with the values IN the list. You can place either numeric or string values in the list, but typically, elements of the list are of the same type of data. we only want to retrieve Person nodes of people born in 1965, 1970, or 1975:
+  ```
+  MATCH (p:Person)
+  WHERE p.born IN [1965, 1970, 1975]
+  RETURN p.name, p.born
+
+  or
+  Here is the query we write to return the name of the actor who played Neo in the movie The Matrix:
+
+  MATCH (p:Person)-[r:ACTED_IN]->(m:Movie)
+  WHERE  'Neo' IN r.roles AND m.title='The Matrix'
+  RETURN p.name, r.roles
+  ```
+- **What properties does a node or relationship have?** One way you can discover the properties for a node is to use the keys() function. This function returns a list of all property keys for a node.Discover the keys for the Person nodes in the graph by running this code
+  ```
+  MATCH (p:Person)
+  RETURN p.name, keys(p)
+  ```
+- **What properties exist in the graph?** you can run this code to return all the property keys defined in the graph.
+  ```
+  CALL db.propertyKeys()
+  ```
+
 
 
 
