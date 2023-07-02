@@ -266,6 +266,89 @@ RETURN p, m
   RETURN p
   ```
 
+**Merge Processing** - MERGE operations work by first trying to find a pattern in the graph. If the pattern is found then the data already exists and is not created. If the pattern is not found, then the data can be created.
+
+**Customizing MERGE behavior** - at runtime that enables you to set properties when the node is created or when the node is found. We can use the ON CREATE SET or ON MATCH SET conditions, or the SET keywords to set any additional properties.
+```
+// Find or create a person with this name
+MERGE (p:Person {name: 'McKenna Grace'})
+
+// Only set the `createdAt` property if the node is created during this query
+ON CREATE SET p.createdAt = datetime()
+
+// Only set the `updatedAt` property if the node was created previously
+ON MATCH SET p.updatedAt = datetime()
+
+// Set the `born` property regardless
+SET p.born = 2006
+
+RETURN p
+```
+
+If you want to set multiple properties for an ON CREATE SET or ON MATCH SET clause, you separate them by commas. For example:
+```
+ON CREATE SET m.released = 2020, m.tagline = `A great ride!'
+```
+Merging with relationships
+```
+// Find or create a person with this name
+MERGE (p:Person {name: 'Michael Caine'})
+
+// Find or create a movie with this title
+MERGE (m:Movie {title: 'The Cider House Rules'})
+
+// Find or create a relationship between the two nodes
+MERGE (p)-[:ACTED_IN]->(m)
+
+or
+
+MERGE (p:Person {name: 'Michael Caine'})-[:ACTED_IN]->(m:Movie {title: 'The Cider House Rules'})
+RETURN p, m
+```
+
+**Deleting Data** In a Neo4j database you can delete:
+  - nodes
+  - relationships
+  - properties
+  - labels
+To delete any data in the database, you must first retrieve it, then you can delete it.
+
+**Deleting a node**
+```
+MERGE (p:Person {name: 'Jane Doe'})
+or
+MATCH (p:Person)
+WHERE p.name = 'Jane Doe'
+DELETE p
+```
+
+**Deleting a relationship**
+```
+MATCH (p:Person {name: 'Jane Doe'})-[r:ACTED_IN]->(m:Movie {title: 'The Matrix'})
+DELETE r
+RETURN p, m
+```
+**Deleting a node and its relationships**
+```
+MATCH (p:Person {name: 'Jane Doe'})
+DETACH DELETE p
+```
+**Deleting labels**
+```
+MATCH (p:Person {name: 'Jane Doe'})
+REMOVE p:Developer
+RETURN p
+```
+**What labels exist in the graph?**
+```
+CALL db.labels()
+```
+
+
+
+
+
+
 
 
 
