@@ -245,7 +245,28 @@ RETURN p, m
   RETURN p, r, m
   ```
 **Updating Properties**
-       
+  ```
+  MATCH (p:Person)-[r:ACTED_IN]->(m:Movie)
+  WHERE p.name = 'Michael Caine' AND m.title = 'The Dark Knight'
+  SET r.roles = ['Mr. Alfred Penny']
+  RETURN p, r, m
+  ```
+**Removing properties** - by using the REMOVE keyword, or setting the property to null. Please note - You should never remove the property that is used as the primary key for a node.
+  ```
+  MATCH (p:Person)-[r:ACTED_IN]->(m:Movie)
+  WHERE p.name = 'Michael Caine' AND m.title = 'The Dark Knight'
+  REMOVE r.roles
+  RETURN p, r, m
+
+  or
+  
+  MATCH (p:Person)
+  WHERE p.name = 'Gene Hackman'
+  SET p.born = null
+  RETURN p
+  ```
+
+
 
 
 
