@@ -63,4 +63,36 @@ you will have problems when you load the data and try to create relationships be
 
 # Inspecting the Data for Import
 
+**Inspecting the CSV data**
+  1. Acquire or download the CSV
+  2. Determine the delimiter (if not comma, you will need to use the FIELDTERMINATOR keyword along with LOAD CSV when you use Cypher to import the data.)
+  3. Determine if headers match fields (By default all of these fields in each row will be read in as string types.)
+  4. Determine if all data is readable
+  5. Is the data clean?
+
+      ```
+      # example to read csv data from a URL
+    
+      LOAD CSV WITH HEADERS
+      FROM 'https://data.neo4j.com/importing/ratings.csv'
+      AS row
+      RETURN count(row)
+      ```
+
+# Using the Neo4j Data Importer
+
+  - What the Neo4j Data Importer does.
+  - How to use the Data Importer.
+  - Post import steps.
+
+**Overview of the Neo4j Data Importer**
+  - Neo4j Data Importer is a graph app the allows you to import CSV files from your local system into the graph.
+  - With this graph app, you can examine the CSV file headers, and map them to nodes and relationships in a Neo4j graph
+  - You connect to a running Neo4j DBMS to perform the import.
+  - Data Importer is that you need not know Cypher to load the data.
+  - It is useful for loading small to medium CSV files that contain fewer that 1M rows.
+  - Data that is imported into the graph can be interpreted as string, integer, float, datetime, or boolean data.
+  - by default data are stored in the graph as a string and you will need to post-process the graph after the import.
+
+
 
