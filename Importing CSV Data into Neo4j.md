@@ -1,4 +1,4 @@
-**Preparing for Importing Data into Neo4j**
+# Importing Data into Neo4j
   - Steps for importing data into Neo4j.
   - Understanding the Neo4j data model.
   - Understanding the data to be used for the import.
