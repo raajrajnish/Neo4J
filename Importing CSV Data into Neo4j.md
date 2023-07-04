@@ -94,5 +94,17 @@ you will have problems when you load the data and try to create relationships be
   - Data that is imported into the graph can be interpreted as string, integer, float, datetime, or boolean data.
   - by default data are stored in the graph as a string and you will need to post-process the graph after the import.
 
+**Requirements for using the Data Importer**
+  - You must use CSV files for import.
+  - CSV files must reside on your local system so you can load them into the graph app.
+  - CSV data must be clean (you learned this in an earlier lesson).
+  - IDs must be unique for all nodes you will be creating.
+  - The CSV file must have headers.
+  - The DBMS must be started.
 
+**Steps for using the Data Importer** - Before you do the import, you should have a starting idea of how your graph data model will be implemented. 
+URL - ARROW APP - https://arrows.app/#/local/id=60qpzkVVRgv-zvGijiw2
+  - 1. Placing the CSV file(s) on your local system and ensure they have headers and are clean.
+    2. Opening the Neo4j Data Importer (url - https://data-importer.neo4j.io/versions/0.7.0/?acceptTerms=true)
+    3. 
 
