@@ -61,11 +61,9 @@ The neo4j.driver() function accepts the following arguments:
   - The initial server address for the Neo4j DBMS - for example localhost or dbhash.databases.neo4j.io (required)
   - The port number that the DBMS is running on (required if the instance is not running on the default port of 7687)
   - Additional connection configuration (for example the routing context)
-  - 
 <p align="center">
   <img src="https://github.com/raajrajnish/Neo4J/blob/main/neo4j.png" alt="python driver" height=200/>
 </p>
-
 
 **Choosing your Scheme**
   - neo4j - Creates an unencrypted connection to the DBMS. If you are connecting to a local DBMS or have not explicitly turned on encryption then
