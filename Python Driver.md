@@ -63,7 +63,7 @@ The neo4j.driver() function accepts the following arguments:
   - Additional connection configuration (for example the routing context)
   - 
 <p align="center">
-  <img src="https://github.com/raajrajnish/Neo4J/blob/main/neo4j.png" alt="python driver" height=300 width=300/>
+  <img src="https://github.com/raajrajnish/Neo4J/blob/main/neo4j.png" alt="python driver" height=300/>
 </p>
 
 
