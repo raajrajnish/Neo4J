@@ -72,3 +72,34 @@ The neo4j.driver() function accepts the following arguments:
     if there is a problem with the certificate.
   - neo4j+ssc - Creates an encrypted connection to the DBMS, but will not attempt to verify the authenticity of the certificate.
 
+Variations of the bolt scheme can be used to connect directly to a single DBMS (within a clustered environment or standalone). This can be useful if you have a single server configured for data science or analytics.
+
+  - bolt - Creates an unencrypted connection directly to a single DBMS.
+  - bolt+s - Creates an encrypted connection directly to a single DBMS and verify the certificate.
+  - bolt+ssc - Creates an encrypted connection to directly to a single DBMS but will not attempt to verify the authenticity of the certificate.
+
+**WHICH SCHEME STRING IS RIGHT FOR YOU?**
+  - You can verify the encryption level of your DBMS by checking the dbms.connector.bolt.enabled key in neo4j.conf.
+  - If you are connecting to a DBMS hosted on Neo4j Aura, you will always use the neo4j+s scheme.
+
+Additional connection information can be appended to the connection string after a ?.
+
+**2 An Authentication Token**
+You can pass the username and password as a tuple to the auth parameter.
+```
+auth = (username, password)
+``
+
+URL - https://neo4j.com/docs/operations-manual/current/authentication-authorization/
+
+**3. Additional Driver Configuration (Optional)**
+This object allows you to provide advanced configuration options, for example setting the connection pool size or changing timeout limits.
+```
+GraphDatabase.driver(uri, auth=auth,
+    max_connection_lifetime=30 * 60,
+    max_connection_pool_size=50,
+    connection_acquisition_timeout=2 * 60)
+```
+URL -https://neo4j.com/docs/python-manual/current/
+
+
