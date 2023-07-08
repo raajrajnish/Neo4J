@@ -85,11 +85,11 @@ Variations of the bolt scheme can be used to connect directly to a single DBMS (
 Additional connection information can be appended to the connection string after a ?.
 
 **2 An Authentication Token**
+
 You can pass the username and password as a tuple to the auth parameter.
 ```
 auth = (username, password)
-``
-
+```
 URL - https://neo4j.com/docs/operations-manual/current/authentication-authorization/
 
 **3. Additional Driver Configuration (Optional)**
@@ -102,4 +102,230 @@ GraphDatabase.driver(uri, auth=auth,
 ```
 URL -https://neo4j.com/docs/python-manual/current/
 
+# Interacting with Neo4j
+
+You will learn how to:
+  - Open a Session and execute a Unit of Work within a Transaction.
+  - Execute Read and Write queries through the Driver.
+  - Consume the results returned from Neo4j.
+  - Handle potential errors thrown by the Driver.
+  
+**Sessions and Transactions** 
+
+**Sessions**
+Through the Driver, we open Sessions.It is important to remember that sessions are not the same as database connections.When the Driver connects to the database, it opens up multiple TCP connections that can be borrowed by the session. A query may be sent over multiple connections, and results may be received by the driver over multiple connections.
+
+Instead, sessions should be considered a client-side abstraction for grouping units of work, which also handle the underlying connections. The connections themselves are managed internally by the driver and are not directly exposed to the application.
+
+To open a new session, call the session() method on the driver.
+```
+with driver.session(database="people") as session:
+```
+If no database is supplied, the default database will be used. This is configured in the dbms.default_database in neo4j.conf, the default value is neo4j
+You cannot create multiple databases in Neo4j Aura or in Neo4j Community Edition.
+
+URL - https://neo4j.com/developer/manage-multiple-databases/
+
+The default access mode is set to write, but this can be overwritten by explicitly calling the execute_read() or execute_write() functions.
+
+**Transactions**
+
+ACID TRANSACTIONS
+A transaction, by definition, must be atomic, consistent, isolated, and durable. Many developers are familiar with ACID transactions from their work with relational databases, and as such the ACID consistency model has been the norm for some time.
+
+Through a Session, we can run one or more Transactions.There are three types of transaction exposed by the driver:
+  - Auto-commit Transactions
+  - Read Transactions
+  - Write Transactions
+
+**Auto-commit Transactions**
+are a single unit of work that are immediately executed against the DBMS and acknowledged immediately.
+You can run an auto-commit transaction by calling the run() method on the session object, passing in a Cypher statement as a string and optionally an object containing a set of parameters.
+```
+session.run(
+    "MATCH (p:Person {name: $name}) RETURN p", # Query
+    name="Tom Hanks" # Named parameters referenced
+)
+```
+
+FOR ONE-OFF QUERIES ONLY
+In the event that there are any transient errors when running a query, the driver will not attempt to retry a query when using session.run(). For this reason, these should only be used for one-off queries and shouldn’t be used in production.
+
+**Read Transactions**
+When you intend to read data from Neo4j, you should execute a Read Transaction.
+In a clustered environment (including Neo4j Aura), read queries are distributed across the cluster.
+The session provides an execute_read() function, which expects a single parameter, a function that represents the unit of work.
+```
+# Define a Unit of work to run within a Transaction (`tx`)
+def get_movies(tx, title):
+    return tx.run("""
+        MATCH (p:Person)-[:ACTED_IN]->(m:Movie)
+        WHERE m.title = $title // (1)
+        RETURN p.name AS name
+        LIMIT 10
+    """, title=title)
+
+# Execute get_movies within a Read Transaction
+session.execute_read(get_movies,
+    title="Arthur" # (2)
+)
+```
+
+PARAMETERIZED QUERIES
+In the query above, the the $ prefix of $title (1) indicates that this value relates to the parameter defined in the second argument (2) of the run() function call.
+
+**Write Transactions**
+If you intend to write data to the database, you should execute a Write Transaction.
+In clustered environments, write queries are sent exclusively to the leader of the cluster. 
+The leader of the cluster is then responsible for processing the query and synchronising the transaction across the followers and read-replica servers in the cluster.
+```
+# Call tx.run() to execute the query to create a Person node
+def create_person(tx, name):
+    return tx.run(
+        "CREATE (p:Person {name: $name})",
+        name=name
+    )
+
+
+# Execute the `create_person` "unit of work" within a write transaction
+session.execute_write(create_person, name="Michael")
+```
+
+The following code defines a function that accepts a name parameter, then executes a write transaction to create a :Person node in the people database.
+```
+def create_person_work(tx, name):
+    return tx.run("CREATE (p:Person {name: $name}) RETURN p",
+        name=name).single()
+
+def create_person(name):
+    # Create a Session for the `people` database
+    session = driver.session(database="people")
+
+    # Create a node within a write transaction
+    record = session.execute_write(create_person_work,
+                                    name=name)
+
+    # Get the `p` value from the first record
+    person = record["p"]
+
+    # Close the session
+    session.close()
+
+    # Return the property from the node
+    return person["name"]
+```
+
+# Processing Results
+
+Query results are typically consumed as a stream of records. The drivers provide a way to iterate through that stream.
+
+**Result**
+Here is an example query which retrieves a list of :Person nodes related to a given Movie.
+```
+# Unit of work
+def get_actors(tx, movie): # (1)
+    result = tx.run("""
+        MATCH (p:Person)-[:ACTED_IN]->(:Movie {title: $title})
+        RETURN p
+    """, title=movie)
+
+    # Access the `p` value from each record
+    return [ record["p"] for record in result ]
+
+# Open a Session
+with driver.session() as session:
+    # Run the unit of work within a Read Transaction
+    actors = session.execute_read(get_actors, movie="The Green Mile") # (2)
+
+    for record in actors:
+        print(record["p"])
+
+    session.close()
+```
+
+The above code can be broken down into two elements:
+  - The get_actors() function defines a unit of work to be executed within a transaction, passed as the first argument of the function, 
+    in this case referenced as tx
+  - The execute_read() method executes the unit of work within a Read Transaction
+  - The result of the execute_read() is a Result object.
+
+The result object acts as a buffer for an iterable list of records and provides a number of options for accessing those records. Once a result is consumed, it is removed from the buffer.
+
+Peeking at Results - If you wish to preview a result without consuming it, you can use the peek method.
+```
+# Check the first record without consuming it
+peek = result.peek()
+print(peek)
+```
+This can be used to preview the first record in the result without removing it from the buffer.
+
+Keys - To get the keys for each record in the result, you can call the keys() method.
+```
+# Get all keys available in the result
+print(result.keys()) # ["p", "roles"]
+```
+
+Single Result - If you only expect a single record, you can use the single() method on the result to return the first record.
+```
+def get_actors_single(tx, movie):
+    result = tx.run("""
+        MATCH (p:Person)-[:ACTED_IN]->(:Movie {title: $title})
+        RETURN p
+    """, title=movie)
+
+    return result.single()
+```
+Value - If you wish to extract a single value from the remaining list of results, you can use the value() method.
+```
+def get_actors_values(tx, movie):
+    result = tx.run("""
+        MATCH (p:Person)-[r:ACTED_IN]->(m:Movie {title: $title})
+        RETURN p.name AS name, m.title AS title, r.roles AS roles
+    """, title=movie)
+
+    return result.value("name", False)
+    # Returns the `name` value, or False if unavailable
+```
+This method two parameters:
+  - The key or index of the field to return for each remaining record, and returns a list of single values.
+  - Optionally, you can provide a default value to be used if the value is None or unavailable.
+
+Values - If you need to extract more than item from each record, you can use the values() method. The method expects one parameter per item requested from the RETURN statement of the query.
+```
+def get_actors_values(tx, movie):
+    result = tx.run("""
+        MATCH (p:Person)-[r:ACTED_IN]->(m:Movie {title: $title})
+        RETURN p.name AS name, m.title AS title, r.roles AS roles
+    """, title=movie)
+
+    return result.values("name", "title", "roles")
+```
+In the above example, a list will be returned, with each entry containing values representing name, title, and roles.
+
+Consume - The consume() method will consume the remainder of the results and return a Result Summary.
+```
+def get_actors_consume(tx, name):
+    result = tx.run("""
+        MERGE (p:Person {name: $name})
+        RETURN p
+    """, name=name)
+
+    info = result.consume()
+```
+The Result Summary contains a information about the server, the query, execution times and a counters object which provide statistics about the query.
+```
+# The time it took for the server to have the result available. (milliseconds)
+print(info.result_available_after)
+
+# The time it took for the server to consume the result. (milliseconds)
+print(info.result_consumed_after)
+```
+The counters object can be used to retrieve the number of nodes, relationships, properties or labels that were affected during a write transaction.
+```
+print("{0} nodes created".format(info.counters.nodes_created))
+print("{0} properties set".format(info.counters.properties_set))
+```
+URL - https://neo4j.com/docs/api/python-driver/4.4/api.html#neo4j.ResultSummary
+
+# Exploring Records
 
