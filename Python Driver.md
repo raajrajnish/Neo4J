@@ -365,4 +365,162 @@ Serial| Python Type | Neo4j Cypher Type |
 13 |**neo4j.graph.Relationship**|Relationship          
 14 |**neo4j.graph.Path**|Path
 
+**Nodes & Relationships**
+Nodes and Relationships are both returned as similar classes.
+```
+result = tx.run("""
+MATCH path = (person:Person)-[actedIn:ACTED_IN]->(movie:Movie {title: $title})
+RETURN path, person, actedIn, movie
+""", title=movie)
+```
+The query will return one record for each :Person and :Movie node with an :ACTED_IN relationship between them.
+**Nodes**
+We can retrieve the movie value from a record using the [] brackets method,
+```
+for record in result:
+    node = record["movie"]
+```
+The value assigned to the node variable will be the instance of a Node. Node is a type provided by the Neo4j Python Driver to hold the information held in Neo4j for the node.
+```
+print(node.id)              # (1)
+print(node.labels)          # (2)
+print(node.items())         # (3)
+
+# (4)
+print(node["name"])
+print(node.get("name", "N/A"))
+```
+  - The id property provides access to the node’s Internal ID
+    eg. 1234
+  - The labels property is a frozenset containing an array of labels attributed to the Node
+    eg. ['Person', 'Actor']
+  - The items() method provides access to the node’s properties as an iterable of all name-value pairs.
+    eg. {name: 'Tom Hanks', tmdbId: '31' }
+  - A single property can be retrieved by either using [] brackets or using the get() method. The get() method also allows you to define a default property if   none exists.
+
+INTERNAL IDS
+Internal IDs refer to the position in the Neo4j store files where the record is held. These numbers can be re-used, a best practice is to always look up a node by an indexed property rather than relying on an internal ID.
+
+**Relationships**
+Relationship objects are similar to a Node in that they provide the same method for accessing the internal ID and properties.
+```
+acted_in = record["actedIn"]
+
+print(acted_in.id)         # (1)
+print(acted_in.type)       # (2)
+print(acted_in.items())    # (3)
+
+# 4
+print(acted_in["roles"])
+print(acted_in.get("roles", "(Unknown)"))
+
+print(acted_in.start_node) # (5)
+print(acted_in.end_node)   # (6)
+```
+  - The id property holds the internal ID of the relationship.
+    eg. 9876
+  - The type property holds the relationship type
+    eg. ACTED_IN
+  - The items() method provides access to the relationships’s properties as an iterable of all name-value pairs.
+    eg. {role: 'Woody'}
+  - As with Nodes, you can access a single relationship property using brackets or the get() method.
+  - start_node - an integer representing the internal ID for the node at the start of the relationship
+  - end_node - an integer representing the internal ID for the node at the end of the relationship
+
+**Paths**
+If you return a path of nodes and relationships, they will be returned as an instance of a Path.
+```
+path = record["path"]
+
+print(path.start_node)  # (1)
+print(path.end_node)    # (2)
+print(len(path))  # (1)
+print(path.relationships)  # (1)
+```
+  - start_node - a Neo4j Integer representing the internal ID for the node at the start of the path
+  - end_node - a Neo4j Integer representing the internal ID for the node at the end of the path
+  - len(path) - A count of the number of relationships within the path
+  - relationships - An array of Relationship objects within the path.
+
+Path Segments
+A path is split into segments representing each relationship in the path. For example, say we have a path of (p:Person)-[:ACTED_IN]→(m:Movie)-[:IN_GENRE]→(g:Genre), there would be two relationships.
+
+  - (p:Person)-[:ACTED_IN]→(m:Movie)
+  - (m:Movie)-[:IN_GENRE]→(g:Genre)
+
+The relationships within a path can be iterated over using the iter() function.
+```
+for rel in iter(path):
+    print(rel.type)
+    print(rel.start_node)
+    print(rel.end_node)
+```
+# Temporal Data Types
+
+Temporal data types are implemented by the neo4j.time module.
+It provides a set of types compliant with ISO-8601 and Cypher.
+The table below shows the general mappings between Cypher and the temporal types provided by the driver.
+
+Serial| Neo4j Cypher Type Type | Python driver type | Python built-in type|
+--- |--- | ---| ---|
+1 |**Date** |neo4j.time.Date|datetime.date        
+2 |**Time** |neo4j.time.Time|datetime.time
+3 |**LocalTime**|neo4j.time.Time|datetime.time          
+4 |**DateTime**|neo4j.time.DateTime|datetime.datetime          
+5 |**LocalDateTime**|neo4j.time.DateTime|datetime.datetime          
+6 |**Duration**|neo4j.time.Duration|datetime.timedelta
+
+```
+# Create a DateTime instance using individual values
+datetime = neo4j.time.DateTime(year, month, day, hour, minute, second, nanosecond)
+
+#  Create a DateTime  a time stamp (seconds since unix epoch).
+from_timestamp = neo4j.time.DateTime(1609459200000) # 2021-01-01
+
+# Get the current date and time.
+now = neo4j.time.DateTime.now()
+
+print(now.year) # 2022
+```
+
+URL - https://neo4j.com/docs/api/python-driver/4.4/temporal_types.html
+
+**Spatial Data Types**
+Points
+
+Serial| Cypher Type | Python Type |
+--- |--- | ---|
+1 |**Point** |neo4j.spatial.Point
+2 |**Point (Cartesian)** |neo4j.spatial.CartesianPoint
+3 |**Point (WGS-84)**|neo4j.spatial.WGS84Point       
+
+**CartesianPoint***
+A Cartesian Point can be created in Cypher by supplying x and y values to the point() function. The optional z value represents the height.
+To create a Cartesian Point in Python, you can import the neo4j.spatial.CartesianPoint class.
+```
+# Using X and Y values
+twoD=CartesianPoint((1.23, 4.56))
+print(twoD.x, twoD.y)
+
+# Using X, Y and Z
+threeD=CartesianPoint((1.23, 4.56, 7.89))
+print(threeD.x, threeD.y, threeD.z)
+```
+**WGS84Point**
+A WGS84 Point can be created in Cypher by supplying latitude and longitude values to the point() function. To create a Cartesian Point in Python, you can import the neo4j.spatial.WGS84Point class.
+```
+london=WGS84Point((-0.118092, 51.509865))
+print(london.longitude, london.latitude)
+
+the_shard=WGS84Point((-0.086500, 51.504501, 310))
+print(the_shard.longitude, the_shard.latitude, the_shard.height)
+```
+**Distance**
+When using the distance() function in Cypher, the distance calculated between two points is returned as a float.
+```
+WITH point({x: 1, y:1}) AS one,
+     point({x: 10, y: 10}) AS two
+
+RETURN distance(one, two) // 12.727922061357855
+```
 
