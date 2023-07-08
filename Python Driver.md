@@ -329,3 +329,40 @@ URL - https://neo4j.com/docs/api/python-driver/4.4/api.html#neo4j.ResultSummary
 
 # Exploring Records
 
+When accessing a record, either within a loop, list comprehension or within a single record, you can use the [] bracket syntax.
+The following example extracts the p value from each record in the result buffer.
+```
+for record in result:
+    print(record["p"]) # Person Node
+```
+You can also access a value using its index, as it relates to the value contained in the keys array:
+```
+# Get all keys available in the result
+print(result.keys()) # ["p", "roles"]
+```
+
+# The Neo4j Type System
+
+As Neo4j is written in Java (the j in Neo4j stands for Java after all), there are some discrepancies between the types stored in the Neo4j database and native Python types.
+
+Some values like strings, floats, booleans, and nulls map directly to Python types, but more complex types need special handling.
+Python Types to Neo4j Types
+
+Serial| Python Type | Neo4j Cypher Type |
+--- |--- | ---|
+1 |**None** |null        
+2 |**bool** |Boolean        
+3 |**int**|Integer          
+4 |**float**|Float          
+5 |**str**|String          
+6 |**bytearray**|Bytes [1]           
+7 |**list**|List     
+8 | **dict**|Map 
+9 |**neo4j.spatial.Point**|Point          
+10 |**neo4j.spatial.CartesianPoint**|Point (Cartesian)  
+11 |**neo4j.spatial.WGS84Point**|Point (WGS-84)     
+12 | **neo4j.graph.Node**|Node 
+13 |**neo4j.graph.Relationship**|Relationship          
+14 |**neo4j.graph.Path**|Path
+
+
