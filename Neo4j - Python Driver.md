@@ -77,9 +77,12 @@ GraphDatabase.driver(uri, auth=auth,
     connection_acquisition_timeout=2 * 60)
 ```
 
-**Verifying Connectivity**
+**Verifying [Connectivity](https://neo4j.com/docs/api/python-driver/current/api.html#neo4j.Driver.verify_connectivity)**
 
-Once connection is established it is always good to check the connectivity to make sure everything is working fine
+This verifies if the driver can establish a reading connection to a remote server or a cluster. Some data will be exchanged. Raises:
+Exception – if the driver cannot connect to the remote. Use the exception to further understand the cause of the connectivity problem.
+Return type: None
+
 ```
 # Create an instance of the driver
 driver = GraphDatabase.driver(os.getenv('NEO4J_URI'), auth=(os.getenv('NEO4J_USERNAME'), os.getenv('NEO4J_PASSWORD')))
