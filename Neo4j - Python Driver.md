@@ -33,9 +33,8 @@ The driver() function accepts the following arguments:
   - An authentication method to use when connecting - in this case, username/password
   - Optionally, you can provide additional configuration as named parameters
 
-<p align="center">
-  <img src="https://github.com/raajrajnish/Neo4J/blob/main/neo4j.png" alt="python driver" height=200/>
-</p>
+
+<img src="https://github.com/raajrajnish/Neo4J/blob/main/neo4j.png" alt="python driver" height="200" width="1000"/>
 
 <p align="center">
   <a href="https://graphacademy.neo4j.com/">Image Source - Graph Academy
