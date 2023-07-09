@@ -19,19 +19,14 @@ Neo4j offers drivers that enable you to establish a connection to the database a
 ```
 pip install neo4j
 ```
-
 **Creating a Driver Instance**
 
-Each driver instance will connect to one DBMS, or Neo4j cluster, depending on the value provided in the connection string.
-Here is an example for how to create a driver instance to connect to a Neo4j instance running on localhost on port 7687 with 
-the username neo4j and password neo:
+Every instance of the driver will establish a connection to either a DBMS or a Neo4j cluster, based on the value specified in the connection string.
 ```
-# Import the neo4j dependency
 from neo4j import GraphDatabase
 
-# Create a new Driver instance
-driver = GraphDatabase.driver("neo4j://localhost:7687",
-    auth=("neo4j", "neo"))
+# Create an instance of the driver
+driver = GraphDatabase.driver(os.getenv('NEO4J_URI'), auth=(os.getenv('NEO4J_USERNAME'), os.getenv('NEO4J_PASSWORD')))
 ```
 
 **Verifying Connectivity**
