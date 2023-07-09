@@ -23,45 +23,28 @@ pip install neo4j
 
 Every instance of the driver will establish a connection to either a DBMS or a Neo4j cluster, based on the value specified in the connection string.
 ```
+driver = GraphDatabase.driver(
+  connectionString,
+  auth=(username, password),
+  **configuration
+)
+Example Below
+
 from neo4j import GraphDatabase
 
 # Create an instance of the driver
 driver = GraphDatabase.driver(os.getenv('NEO4J_URI'), auth=(os.getenv('NEO4J_USERNAME'), os.getenv('NEO4J_PASSWORD')))
 ```
 
- **The Connection String**- A connection string typically consists of four elements:
-  - The scheme used to connect to the Neo4j instance - for example neo4j or neo4j+s (required)
-  - The initial server address for the Neo4j DBMS - for example localhost or dbhash.databases.neo4j.io (required)
-  - The port number that the DBMS is running on (required if the instance is not running on the default port of 7687)
+ **NEO4J_URI**- A connection string typically consists of four elements:
+  - The scheme used to connect to the Neo4j instance - for example neo4j or neo4j+s (**required**)
+  - The initial server address for the Neo4j DBMS - for example localhost or dbhash.databases.neo4j.io (**required**)
+  - The port number that the DBMS is running on (**required if the instance is not running on the default port of 7687**)
   - Additional connection configuration (for example the routing context)
 
 <img src="https://github.com/raajrajnish/Neo4J/blob/main/url.png" alt="python driver" />
 
 <img src="https://github.com/raajrajnish/Neo4J/blob/main/by.png" alt="python driver" />
-
-
-
-
-**Verifying Connectivity**
-```
-# Verify the connection details
-driver.verify_connectivity()
-```
-
-**Connection Strings and Authentication**
-Let’s take a closer look at the driver() function and how it is used to create a driver instance.
-
-```
-driver = GraphDatabase.driver(
-  connectionString, // (1)
-  auth=(username, password), // (2)
-  **configuration // (3)
-)
-```
-
-
-
-
 
 
 **Choosing your Scheme**
@@ -78,10 +61,20 @@ Variations of the bolt scheme can be used to connect directly to a single DBMS (
   - bolt+ssc - Creates an encrypted connection to directly to a single DBMS but will not attempt to verify the authenticity of the certificate.
 
 **WHICH SCHEME STRING IS RIGHT FOR YOU?**
-  - You can verify the encryption level of your DBMS by checking the dbms.connector.bolt.enabled key in neo4j.conf.
   - If you are connecting to a DBMS hosted on Neo4j Aura, you will always use the neo4j+s scheme.
 
 Additional connection information can be appended to the connection string after a ?.
+
+
+**Verifying Connectivity**
+```
+# Verify the connection details
+driver.verify_connectivity()
+```
+
+
+
+
 
 **2 An Authentication Token**
 
