@@ -28,13 +28,16 @@ from neo4j import GraphDatabase
 # Create an instance of the driver
 driver = GraphDatabase.driver(os.getenv('NEO4J_URI'), auth=(os.getenv('NEO4J_USERNAME'), os.getenv('NEO4J_PASSWORD')))
 ```
+**Exploring driver function**
+
 The driver() function accepts the following arguments:
   - A connection string
   - An authentication method to use when connecting - in this case, username/password
   - Optionally, you can provide additional configuration as named parameters
 
 
-<img src="https://github.com/raajrajnish/Neo4J/blob/main/neo4j.png" alt="python driver" height="200" width="1000"/>
+
+<img src="https://github.com/raajrajnish/Neo4J/blob/main/url.png" alt="python driver" />
 
 <p align="center">
   <a href="https://graphacademy.neo4j.com/">Image Source - Graph Academy
