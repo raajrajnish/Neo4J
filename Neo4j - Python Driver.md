@@ -36,7 +36,7 @@ driver = GraphDatabase.driver(
   - The port number that the DBMS is running on (**required if the instance is not running on the default port of 7687**)
   - Additional connection configuration (for example the routing context)
 
-<img src="https://github.com/raajrajnish/Neo4J/blob/main/url.png" alt="python driver" />
+<img src="https://github.com/raajrajnish/Neo4J/blob/main/neo4j.png" alt="python driver" />
 
 <img src="https://github.com/raajrajnish/Neo4J/blob/main/by.png" alt="python driver" />
 
