@@ -21,15 +21,16 @@ pip install neo4j
 ```
 **Creating a Driver Instance**
 
-Every instance of the driver will establish a connection to either a DBMS or a Neo4j cluster, based on the value specified in the connection string.
+Every instance of the driver will establish a connection to either a DBMS or a Neo4j cluster, based on the value specified in the connection string. General syntax as below
 ```
+
 driver = GraphDatabase.driver(
   connectionString,
   auth=(username, password),
   **configuration
 )
-Example Below
-
+```
+```
 from neo4j import GraphDatabase
 
 # Create an instance of the driver
@@ -45,7 +46,7 @@ driver = GraphDatabase.driver(os.getenv('NEO4J_URI'), auth=(os.getenv('NEO4J_USE
 
 <img src="https://github.com/raajrajnish/Neo4J/blob/main/by.png" alt="python driver" />
 
-**Choosing your Scheme**
+**1. Choosing your Scheme**
   - **neo4j** - Creates an unencrypted connection to the DBMS. If you are connecting to a local DBMS or have not explicitly turned on encryption then
     this is most likely the option you are looking for.
   - **neo4j+s** - Creates an encrypted connection to the DBMS. The driver will verify the authenticity of the certificate and fail to verify connectivity
@@ -58,12 +59,10 @@ Variations of the bolt scheme can be used to connect directly to a single DBMS (
   - **bolt+s** - Creates an encrypted connection directly to a single DBMS and verify the certificate.
   - **bolt+ssc** - Creates an encrypted connection to directly to a single DBMS but will not attempt to verify the authenticity of the certificate.
 
-**WHICH SCHEME STRING IS RIGHT FOR YOU?**
-  - If you are connecting to a DBMS hosted on Neo4j Aura, you will always use the neo4j+s scheme.
-
+**Which schema string is right for you?** - If you are connecting to a DBMS hosted on Neo4j Aura, you will always use the neo4j+s scheme. 
 Additional connection information can be appended to the connection string after a ?.
 
-**2 An [Authentication Token](https://neo4j.com/docs/operations-manual/current/authentication-authorization/)**
+**2. An [Authentication Token](https://neo4j.com/docs/operations-manual/current/authentication-authorization/)**
 
 You can pass the username and password as a tuple to the auth parameter.
 ```
@@ -79,7 +78,11 @@ GraphDatabase.driver(uri, auth=auth,
 ```
 
 **Verifying Connectivity**
+
+Once connection is established it is always good to check the connectivity to make sure everything is working fine
 ```
+# Create an instance of the driver
+driver = GraphDatabase.driver(os.getenv('NEO4J_URI'), auth=(os.getenv('NEO4J_USERNAME'), os.getenv('NEO4J_PASSWORD')))
 # Verify the connection details
 driver.verify_connectivity()
 ```
