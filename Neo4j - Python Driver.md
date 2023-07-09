@@ -28,6 +28,21 @@ from neo4j import GraphDatabase
 # Create an instance of the driver
 driver = GraphDatabase.driver(os.getenv('NEO4J_URI'), auth=(os.getenv('NEO4J_USERNAME'), os.getenv('NEO4J_PASSWORD')))
 ```
+The driver() function accepts the following arguments:
+  - A connection string
+  - An authentication method to use when connecting - in this case, username/password
+  - Optionally, you can provide additional configuration as named parameters
+
+<p align="center">
+  <img src="https://github.com/raajrajnish/Neo4J/blob/main/neo4j.png" alt="python driver" height=200/>
+</p>
+
+<p align="center">
+  <a href="https://graphacademy.neo4j.com/">Image Source - Graph Academy
+</p>
+
+
+
 
 **Verifying Connectivity**
 ```
@@ -46,19 +61,14 @@ driver = GraphDatabase.driver(
 )
 ```
 
-The neo4j.driver() function accepts the following arguments:
-  - A connection string
-  - An authentication method to use when connecting - in this case, username/password authenticatio
-  - Optionally, you can provide additional configuration as named parameters
+
 
 **1. The Connection String**- A connection string typically consists of four elements:
   - The scheme used to connect to the Neo4j instance - for example neo4j or neo4j+s (required)
   - The initial server address for the Neo4j DBMS - for example localhost or dbhash.databases.neo4j.io (required)
   - The port number that the DBMS is running on (required if the instance is not running on the default port of 7687)
   - Additional connection configuration (for example the routing context)
-<p align="center">
-  <img src="https://github.com/raajrajnish/Neo4J/blob/main/neo4j.png" alt="python driver" height=200/>
-</p>
+
 
 **Choosing your Scheme**
   - neo4j - Creates an unencrypted connection to the DBMS. If you are connecting to a local DBMS or have not explicitly turned on encryption then
