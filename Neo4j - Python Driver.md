@@ -7,7 +7,7 @@ In this module we will look on how to use the official driver to connect with Ne
    * :large_blue_circle: Instantiate the Driver.
    * :large_blue_circle: Confirm the successful establishment of a connection between the Driver and Neo4j.
 
-### About the [Driver](https://neo4j.com/developer/python/)
+### Section 1 : The [Driver](https://neo4j.com/developer/python/)
 Neo4j offers drivers that enable you to establish a connection to the database and build applications that perform operations such as creating, reading, updating, and deleting data within the graph. To execute a Cypher statement against a Neo4j database you will use an object called a Driver.
   - Driver version :point_right: **5.10**
   - Neo4j versions supported :point_right: **>= Neo4j 4.4**
@@ -87,9 +87,7 @@ driver = GraphDatabase.driver(os.getenv('NEO4J_URI'), auth=(os.getenv('NEO4J_USE
 driver.verify_connectivity()
 ```
 
-
-
-# Interacting with Neo4j
+### Section 2 : Interacting with Neo4j
 
 You will learn how to:
   - Open a Session and execute a Unit of Work within a Transaction.
