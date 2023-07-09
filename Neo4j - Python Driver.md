@@ -7,15 +7,15 @@ In this module we will look on how to use the official driver to connect with Ne
    * :large_blue_circle: Instantiate the Driver.
    * :large_blue_circle: Confirm the successful establishment of a connection between the Driver and Neo4j.
 
-## About the [Driver](https://neo4j.com/developer/python/)
+### About the [Driver](https://neo4j.com/developer/python/)
 Neo4j offers drivers that enable you to establish a connection to the database and build applications that perform operations such as creating, reading, updating, and deleting data within the graph. To execute a Cypher statement against a Neo4j database you will use an object called a Driver.
-  - Current version - **5.10**
-  - Neo4j versions supported: **>= Neo4j 4.4**
-  - Python versions supported: **>= Python 3.7**
+  - Driver version :point_right: **5.10**
+  - Neo4j versions supported :point_right: **>= Neo4j 4.4**
+  - Python versions supported :point_right: **>= Python 3.7**
 
 :flashlight: _In your application, it is recommended to instantiate a single instance of the Driver per Neo4j cluster or DBMS, which can then be shared throughout your application._
 
-**Installing the Driver**
+**Installing the [Driver](https://pypi.org/project/neo4j/)**
 ```
 pip install neo4j
 ```
