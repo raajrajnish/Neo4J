@@ -35,7 +35,6 @@ from neo4j import GraphDatabase
 # Create an instance of the driver
 driver = GraphDatabase.driver(os.getenv('NEO4J_URI'), auth=(os.getenv('NEO4J_USERNAME'), os.getenv('NEO4J_PASSWORD')))
 ```
-
  **NEO4J_URI**- A connection string typically consists of four elements:
   - The scheme used to connect to the Neo4j instance - for example neo4j or neo4j+s (**required**)
   - The initial server address for the Neo4j DBMS - for example localhost or dbhash.databases.neo4j.io (**required**)
@@ -46,25 +45,38 @@ driver = GraphDatabase.driver(os.getenv('NEO4J_URI'), auth=(os.getenv('NEO4J_USE
 
 <img src="https://github.com/raajrajnish/Neo4J/blob/main/by.png" alt="python driver" />
 
-
 **Choosing your Scheme**
-  - neo4j - Creates an unencrypted connection to the DBMS. If you are connecting to a local DBMS or have not explicitly turned on encryption then
+  - **neo4j** - Creates an unencrypted connection to the DBMS. If you are connecting to a local DBMS or have not explicitly turned on encryption then
     this is most likely the option you are looking for.
-  - neo4j+s - Creates an encrypted connection to the DBMS. The driver will verify the authenticity of the certificate and fail to verify connectivity
+  - **neo4j+s** - Creates an encrypted connection to the DBMS. The driver will verify the authenticity of the certificate and fail to verify connectivity
     if there is a problem with the certificate.
-  - neo4j+ssc - Creates an encrypted connection to the DBMS, but will not attempt to verify the authenticity of the certificate.
+  - **neo4j+ssc** - Creates an encrypted connection to the DBMS, but will not attempt to verify the authenticity of the certificate.
 
 Variations of the bolt scheme can be used to connect directly to a single DBMS (within a clustered environment or standalone). This can be useful if you have a single server configured for data science or analytics.
 
-  - bolt - Creates an unencrypted connection directly to a single DBMS.
-  - bolt+s - Creates an encrypted connection directly to a single DBMS and verify the certificate.
-  - bolt+ssc - Creates an encrypted connection to directly to a single DBMS but will not attempt to verify the authenticity of the certificate.
+  - **bolt** - Creates an unencrypted connection directly to a single DBMS.
+  - **bolt+s** - Creates an encrypted connection directly to a single DBMS and verify the certificate.
+  - **bolt+ssc** - Creates an encrypted connection to directly to a single DBMS but will not attempt to verify the authenticity of the certificate.
 
 **WHICH SCHEME STRING IS RIGHT FOR YOU?**
   - If you are connecting to a DBMS hosted on Neo4j Aura, you will always use the neo4j+s scheme.
 
 Additional connection information can be appended to the connection string after a ?.
 
+**2 An [Authentication Token](https://neo4j.com/docs/operations-manual/current/authentication-authorization/)**
+
+You can pass the username and password as a tuple to the auth parameter.
+```
+auth = (username, password)
+```
+**3. Additional [Driver Configuration](https://neo4j.com/docs/python-manual/current/) (Optional)**
+This object allows you to provide advanced configuration options, for example setting the connection pool size or changing timeout limits.
+```
+GraphDatabase.driver(uri, auth=auth,
+    max_connection_lifetime=30 * 60,
+    max_connection_pool_size=50,
+    connection_acquisition_timeout=2 * 60)
+```
 
 **Verifying Connectivity**
 ```
@@ -73,26 +85,6 @@ driver.verify_connectivity()
 ```
 
 
-
-
-
-**2 An Authentication Token**
-
-You can pass the username and password as a tuple to the auth parameter.
-```
-auth = (username, password)
-```
-URL - https://neo4j.com/docs/operations-manual/current/authentication-authorization/
-
-**3. Additional Driver Configuration (Optional)**
-This object allows you to provide advanced configuration options, for example setting the connection pool size or changing timeout limits.
-```
-GraphDatabase.driver(uri, auth=auth,
-    max_connection_lifetime=30 * 60,
-    max_connection_pool_size=50,
-    connection_acquisition_timeout=2 * 60)
-```
-URL -https://neo4j.com/docs/python-manual/current/
 
 # Interacting with Neo4j
 
