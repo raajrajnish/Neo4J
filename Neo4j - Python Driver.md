@@ -30,13 +30,7 @@ driver = GraphDatabase.driver(
   **configuration
 )
 ```
-```
-from neo4j import GraphDatabase
-
-# Create an instance of the driver
-driver = GraphDatabase.driver(os.getenv('NEO4J_URI'), auth=(os.getenv('NEO4J_USERNAME'), os.getenv('NEO4J_PASSWORD')))
-```
- **NEO4J_URI**- A connection string typically consists of four elements:
+**NEO4J_URI**- A connection string typically consists of four elements:
   - The scheme used to connect to the Neo4j instance - for example neo4j or neo4j+s (**required**)
   - The initial server address for the Neo4j DBMS - for example localhost or dbhash.databases.neo4j.io (**required**)
   - The port number that the DBMS is running on (**required if the instance is not running on the default port of 7687**)
@@ -72,6 +66,13 @@ GraphDatabase.driver(uri, auth=auth,
     max_connection_lifetime=30 * 60,
     max_connection_pool_size=50,
     connection_acquisition_timeout=2 * 60)
+```
+**Example - Establish a connection**
+```
+from neo4j import GraphDatabase
+
+# Create an instance of the driver
+driver = GraphDatabase.driver(os.getenv('NEO4J_URI'), auth=(os.getenv('NEO4J_USERNAME'), os.getenv('NEO4J_PASSWORD')))
 ```
 
 **Verifying [Connectivity](https://neo4j.com/docs/api/python-driver/current/api.html#neo4j.Driver.verify_connectivity)**
