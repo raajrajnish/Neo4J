@@ -62,14 +62,11 @@ Variations of the bolt scheme can be used to connect directly to a single DBMS (
 **Which schema string is right for you?** - If you are connecting to a DBMS hosted on Neo4j Aura, you will always use the neo4j+s scheme. 
 Additional connection information can be appended to the connection string after a ?.
 
-**2. An [Authentication Token](https://neo4j.com/docs/operations-manual/current/authentication-authorization/)**
-
-You can pass the username and password as a tuple to the auth parameter.
+**2. An [Authentication Token](https://neo4j.com/docs/operations-manual/current/authentication-authorization/)** - You can pass the username and password as a tuple to the auth parameter.
 ```
 auth = (username, password)
 ```
-**3. Additional [Driver Configuration](https://neo4j.com/docs/python-manual/current/) (Optional)**
-This object allows you to provide advanced configuration options, for example setting the connection pool size or changing timeout limits.
+**3. Additional [Driver Configuration](https://neo4j.com/docs/python-manual/current/) (Optional)** - This object allows you to provide advanced configuration options, for example setting the connection pool size or changing timeout limits.
 ```
 GraphDatabase.driver(uri, auth=auth,
     max_connection_lifetime=30 * 60,
