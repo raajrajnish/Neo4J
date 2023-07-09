@@ -524,3 +524,58 @@ WITH point({x: 1, y:1}) AS one,
 RETURN distance(one, two) // 12.727922061357855
 ```
 
+# Handling Driver Errors
+
+When executing a Cypher statement, certain exceptions and error cases may arise. One error could be a transient error that may be resolved if retried.
+In the Neo4j Python Driver, an error extending the neo4j.exceptions.Neo4jError class will be thrown.
+
+**Exception Types**
+
+Depending on the nature of the error, you may receive one of the following exceptions:
+
+  - neo4j.exceptions.Neo4jError - Raised when the Cypher engine returns an error to the client.
+  - neo4j.exceptions.ClientError - The Client sent a bad request - changing the request might yield a successful outcome.
+  - neo4j.exceptions.CypherSyntaxError - Raised when the Cypher statement contains one or more syntax errors
+  - neo4j.exceptions.CypherTypeError - Raised when or more of the data types in the query is incorrect
+  - neo4j.exceptions.ConstraintError - Raised when action is rejected due to a constraint violation
+  - neo4j.exceptions.AuthError - Raised when authentication failure occurs.
+  - neo4j.exceptions.Forbidden - Raised when the action is forbidden for the authenticated user
+  - neo4j.exceptions.TransientError - The database cannot service the request right now, retrying later might yield a successful outcome
+  - neo4j.exceptions.ForbiddenOnReadOnlyDatabase - The write cypher you are requesting cannot be run on a readonly database
+  - neo4j.exceptions.NotALeader - The write query cannot be executed on the current server because it is not the leader of the cluster
+
+You can catch the specific exception above within a try/catch block, or catch all Neo4jErrors instances:
+```
+# Import the Exception classes from neo4j.exceptions
+from neo4j.exceptions import Neo4jError, ConstraintError
+
+# Attempt a query
+try:
+    tx.run(cypher, params)
+except ConstraintError as err:
+    print("Handle constaint violation")
+    print(err.code) # (1)
+    print(err.message) # (2)
+except Neo4jError as err:
+    print("Handle generic Neo4j Error")
+    print(err.code) # (1)
+    print(err.message) # (2)
+```
+Exceptions contain code (1) and message (2) properties to help you further diagnose the problem.
+
+**Error Codes**
+
+The Neo4jError includes a code property, which provides higher-level information about the query.
+
+Each status code follows the same format, and includes four parts:
+```
+Neo.[Classification].[Category].[Title]
+(1)        (2)          (3)       (4)
+```
+
+  - Every Neo4j Error code is prefixed with Neo.
+  - The Classification provides a high-level classification of the error - for example, a client-side error or an error with the database.
+  - The Category provides a higher-level category for the error - for example, a problem with clustering, a procedure or the database schema.
+  - The Title provides specific information about the error that has occurred.
+
+URL - https://neo4j.com/docs/status-codes/current/
