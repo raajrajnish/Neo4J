@@ -1,22 +1,19 @@
-# Neo4j Python Driver - *The [Official Neo4j Driver](https://neo4j.com/docs/api/python-driver/current/api.html#api-documentation) for Python*
-In this chapter we will look on how to use the official driver to connect with Neo4j using python language.
-  - Current version - 5.10
-  - Neo4j versions supported: >= Neo4j 4.4
-  - Python versions supported: >= Python 3.7
+<img src="https://dist.neo4j.com/wp-content/uploads/20210423072428/neo4j-logo-2020-1.svg" width="150" />
 
-Upon completion of this module, you will have acquired the skills necessary to:
-  - Install the Python Driver for Neo4j.
-  - Construct a Connection String.
-  - Instantiate the Driver.
-  - Confirm the successful establishment of a connection between the Driver and Neo4j.
+## Python Driver - The [Official Neo4j Driver](https://neo4j.com/docs/api/python-driver/current/api.html#api-documentation) for Python
+In this module we will look on how to use the official driver to connect with Neo4j using python language. Upon completion of this module, you will have acquired the skills necessary to:
+   * :large_blue_circle: Install the Python Driver for Neo4j.
+   * :large_blue_circle: Construct a Connection String.
+   * :large_blue_circle: Instantiate the Driver.
+   * :large_blue_circle: Confirm the successful establishment of a connection between the Driver and Neo4j.
 
-# About the Driver
+## About the [Driver](https://neo4j.com/developer/python/)
+Neo4j offers drivers that enable you to establish a connection to the database and build applications that perform operations such as creating, reading, updating, and deleting data within the graph. To execute a Cypher statement against a Neo4j database you will use an object called a Driver.
+  - Current version - **5.10**
+  - Neo4j versions supported: **>= Neo4j 4.4**
+  - Python versions supported: **>= Python 3.7**
 
-To execute a Cypher statement against a Neo4j database you will use an object called a Driver. To connect to and query Neo4j 
-from within a Python application, you use the Neo4j Python Driver.
-URL - https://neo4j.com/developer/python/
-
-You should create a single instance of the Driver in your application per Neo4j cluster or DBMS, which can then be shared across your application.
+:flashlight: _In your application, it is recommended to instantiate a single instance of the Driver per Neo4j cluster or DBMS, which can then be shared throughout your application._
 
 **Installing the Driver**
 ```
