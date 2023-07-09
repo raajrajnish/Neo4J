@@ -44,17 +44,12 @@ driver = GraphDatabase.driver(
 
 
 **1. Choosing your Scheme**
-  - **neo4j** - Creates an unencrypted connection to the DBMS. If you are connecting to a local DBMS or have not explicitly turned on encryption then
-    this is most likely the option you are looking for.
-  - **neo4j+s** - Creates an encrypted connection to the DBMS. The driver will verify the authenticity of the certificate and fail to verify connectivity
-    if there is a problem with the certificate.
-  - **neo4j+ssc** - Creates an encrypted connection to the DBMS, but will not attempt to verify the authenticity of the certificate.
+
+<img src="https://github.com/raajrajnish/Neo4J/blob/main/schema_1.png" alt="python driver" />
 
 Variations of the bolt scheme can be used to connect directly to a single DBMS (within a clustered environment or standalone). This can be useful if you have a single server configured for data science or analytics.
 
-  - **bolt** - Creates an unencrypted connection directly to a single DBMS.
-  - **bolt+s** - Creates an encrypted connection directly to a single DBMS and verify the certificate.
-  - **bolt+ssc** - Creates an encrypted connection to directly to a single DBMS but will not attempt to verify the authenticity of the certificate.
+<img src="https://github.com/raajrajnish/Neo4J/blob/main/schema_2.png" alt="python driver" />
 
 **Which schema string is right for you?** - If you are connecting to a DBMS hosted on Neo4j Aura, you will always use the neo4j+s scheme. 
 Additional connection information can be appended to the connection string after a ?.
