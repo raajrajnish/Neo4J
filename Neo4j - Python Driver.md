@@ -38,7 +38,10 @@ driver = GraphDatabase.driver(
 
 <img src="https://github.com/raajrajnish/Neo4J/blob/main/neo4j.png" alt="python driver" />
 
-<img src="https://github.com/raajrajnish/Neo4J/blob/main/by.png" alt="python driver" />
+<p align="center">
+  <a href="https://graphacademy.neo4j.com/" target="_blank">Image Source Graph Academy</a>
+</p>
+
 
 **1. Choosing your Scheme**
   - **neo4j** - Creates an unencrypted connection to the DBMS. If you are connecting to a local DBMS or have not explicitly turned on encryption then
