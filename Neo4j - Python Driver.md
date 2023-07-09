@@ -1,4 +1,4 @@
-# Neo4j Python Driver - *The Official Neo4j Driver for Python*
+# Neo4j Python Driver - *The [Official Neo4j Driver](https://neo4j.com/docs/api/python-driver/current/api.html#api-documentation) for Python*
 In this chapter we will look on how to use the official driver to connect with Neo4j using python language.
   - Current version - 5.10
   - Neo4j versions supported: >= Neo4j 4.4
