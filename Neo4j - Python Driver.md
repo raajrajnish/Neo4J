@@ -1,11 +1,14 @@
-# Neo4j Python Driver
+# Neo4j Python Driver - *The Official Neo4j Driver for Python*
+In this chapter we will look on how to use the official driver to connect with Neo4j using python language.
+  - Current version - 5.10
+  - Neo4j versions supported: >= Neo4j 4.4
+  - Python versions supported: >= Python 3.7
 
-You will learn about the lifecycle of the Neo4j Driver and how it should be used within your application. 
-By the end of this module, you will have learned to how to:
-  - Install the Neo4j Python Driver.
-  - Build a Connection String.
-  - Create an instance of the Driver.
-  - Verify that the Driver has successfully connected to Neo4j.
+Upon completion of this module, you will have acquired the skills necessary to:
+  - Install the Python Driver for Neo4j.
+  - Construct a Connection String.
+  - Instantiate the Driver.
+  - Confirm the successful establishment of a connection between the Driver and Neo4j.
 
 # About the Driver
 
