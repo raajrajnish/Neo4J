@@ -72,7 +72,7 @@ A graph data structure consists of nodes (discrete objects) that can be connecte
 
 The Neo4j property graph database model consists of:
   - **Nodes** describe entities (discrete objects) of a domain. Nodes can have zero or more labels to define (classify) what kind of nodes they are.
-  - **Relationships** describe a connection between a source node and a target node. Relationships always have a direction (one direction). Relationships must have a type (one type) to define (classify) what type of relationship they are. Nodes and relationships can have properties (key-value pairs), which further describe them.
+  
 
 **Nodes**
 
@@ -101,6 +101,68 @@ Since labels can be added and removed during runtime, they can also be used to m
 </p>
 
 
+### Relationship
 
+- Describe a connection between a source node and a target node. 
+- Relationships always have a direction (one direction). 
+- Relationships must have a type (one type) to define (classify) what type of relationship they are. 
+- Nodes and relationships can have properties (key-value pairs), which further describe them.
+- It is possible for a node to have a relationship to itself.
 
+<p align="center">
+  <img src="https://neo4j.com/docs/getting-started/_images/graph_example_relationship-arr.svg"/>
+</p>
 
+The relationship type: ACTED_IN
+The properties are:
+- roles: ['Forrest']
+- performance: 5
+
+Relationships always have a direction. However, the direction can be disregarded where it is not useful. This means that there is no need to add duplicate relationships in the opposite direction unless it is needed to describe the data model properly.
+
+Relationship type
+A relationship must have exactly one relationship type.
+
+<p align="center">
+  <img src="https://neo4j.com/docs/getting-started/_images/graphdb-nodes-and-rel-arr.svg"/>
+</p>
+
+### Properties
+
+Properties are key-value pairs that are used for storing data on nodes and relationships.The value part of a property:
+- Can hold different data types, such as number, string, or boolean.
+- Can hold a homogeneous list (array) containing, for example, strings, numbers, or boolean values.
+
+### Traversals and paths
+
+A traversal is how you query a graph in order to find answers to questions.Traversing a graph means visiting nodes by following relationships according to some rules. In most cases only a subset of the graph is visited.
+
+Example - To find out which movies Tom Hanks acted in according to the tiny example database, the traversal would start from the Tom Hanks node, follow any ACTED_IN relationships connected to the node, and end up with the Movie node Forrest Gump as the result (see the black lines):
+
+<p align="center">
+  <img src="https://neo4j.com/docs/getting-started/_images/graphdb-traversal-arr.svg"/>
+</p>
+
+The shortest possible path has length zero. It contains a single node and no relationships. A path containing only a single node has the length of 0.
+A path containing one relationship has the length of 1.
+
+### Schema
+
+A schema in Neo4j refers to indexes and constraints.Neo4j is often described as schema optional, meaning that it is not necessary to create indexes and constraints. You can create data — nodes, relationships and properties — without defining a schema up front. Indexes and constraints can be introduced when desired, in order to gain performance or modeling benefits.
+
+### Indexes
+
+Indexes are used to increase performance. To see examples of how to work with indexes, see Using indexes. For detailed descriptions of how to work with indexes in Cypher, see Cypher Manual → Indexes.
+
+### Constraints
+Constraints are used to make sure that the data adheres to the rules of the domain. "If a node has a label of Actor and a property of name, then the value of name must be unique among all nodes that have the Actor label".
+
+### Naming conventions
+
+Node labels, relationship types, and properties (the key part) are case sensitive, meaning, for example, that the property name is different from the property Name.The following naming conventions are recommended:
+
+Graph entity| Recommended style |Example |
+--- |--- | ---|
+Node label|Camel case, beginning with an upper-case character |:VehicleOwner rather than :vehicle_owner        
+Relationship type |Upper case, using underscore to separate words |:OWNS_VEHICLE rather than :ownsVehicle        
+Property |Lower camel case, beginning with a lower-case character|firstName rather than first_name            
