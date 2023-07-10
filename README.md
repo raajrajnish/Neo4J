@@ -5,6 +5,8 @@
 In this module we will learn about what graph databases are and what is neo4j. How they are better when compared with RDBMS databases.
 We will also look at advantages and disadvantages of Graph Databases.
 
+Please note all the diagrams and resources either created by author or directly taken form the Neo4j [website](https://neo4j.com/)
+
 # What is a Graph Database?
 
 A Neo4j graph database stores nodes and relationships instead of tables or documents.Your data is stored without restricting it to a pre-defined model, 
@@ -13,10 +15,6 @@ allowing a very flexible way of thinking about and using it.
 ### The property graph model
 
 <img src="https://neo4j.com/docs/getting-started/_images/sample-cypher.svg"/>
-<p align="center">
-  <a href="https://neo4j.com/docs/getting-started/get-started-with-neo4j/graph-database/" target="_blank">Image Source Neo4j</a>
-</p>
-
 
 In Neo4j, information is organized as nodes, relationships, and properties.
   - **Nodes** are the entities in the graph.
@@ -58,8 +56,51 @@ Discover inter-relationships between items.
 # Where and how is Neo4j used?
 
 <img src="https://neo4j.com/docs/getting-started/_images/use-case-summary.svg"/>
+
+# Graph database concepts
+
+Neo4j uses a property graph database model. 
+A graph data structure consists of nodes (discrete objects) that can be connected by relationships. Below is the image of a graph with three nodes (the circles) and three relationships (the arrows).
+
 <p align="center">
-  <a href="https://neo4j.com/docs/getting-started/get-started-with-neo4j/graph-database/" target="_blank">Image Source Neo4j</a>
+  <img src="https://neo4j.com/docs/getting-started/_images/graph_concept_three_nodes-arr.svg" height='250' width='250'/>
 </p>
 
-    
+<p align="center">
+  <a href="" target="_blank">Concept of a graph structure</a>
+</p>
+
+The Neo4j property graph database model consists of:
+  - **Nodes** describe entities (discrete objects) of a domain. Nodes can have zero or more labels to define (classify) what kind of nodes they are.
+  - **Relationships** describe a connection between a source node and a target node. Relationships always have a direction (one direction). Relationships must have a type (one type) to define (classify) what type of relationship they are. Nodes and relationships can have properties (key-value pairs), which further describe them.
+
+**Nodes**
+
+Nodes are used to represent entities (discrete objects) of a domain.
+The simplest possible graph is a single node with no relationships. Consider the following graph, consisting of a single node.
+	
+ <p align="center">
+  <img src="https://neo4j.com/docs/getting-started/_images/graph_single_node-arr.svg" height='250' width='250'/>
+</p>
+
+The node labels are:
+  - Person
+  - Actor
+The properties are:
+  - name: Tom Hanks
+  - born: 1956
+
+**Node labels**
+
+Labels shape the domain by grouping (classifying) nodes into sets where all nodes with a certain label belong to the same set. For example, all nodes representing users could be labeled with the label User
+
+Since labels can be added and removed during runtime, they can also be used to mark temporary states for nodes. A node can have zero to many labels. In the example graph, the node labels, Person, Actor, and Movie, are used to describe (classify) the nodes. More labels can be added to express different dimensions of the data.
+
+<p align="center">
+  <img src="https://neo4j.com/docs/getting-started/_images/graphdb-simple-labels-multi-arr.svg"/>
+</p>
+
+
+
+
+
