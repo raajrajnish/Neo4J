@@ -30,7 +30,7 @@ driver = GraphDatabase.driver(
   **configuration
 )
 ```
-**NEO4J_URI**- A connection string typically consists of four elements:
+**1. Connection String (NEO4J_URI)**- A connection string typically consists of four elements:
   - The scheme used to connect to the Neo4j instance - for example neo4j or neo4j+s (**required**)
   - The initial server address for the Neo4j DBMS - for example localhost or dbhash.databases.neo4j.io (**required**)
   - The port number that the DBMS is running on (**required if the instance is not running on the default port of 7687**)
@@ -43,7 +43,7 @@ driver = GraphDatabase.driver(
 </p>
 
 
-**1. Choosing your Scheme**
+**Choosing your Scheme**
 
 <img src="https://github.com/raajrajnish/Neo4J/blob/main/schema_1.png" alt="python driver" />
 
