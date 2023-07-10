@@ -75,9 +75,9 @@ driver = GraphDatabase.driver(os.getenv('NEO4J_URI'), auth=(os.getenv('NEO4J_USE
 
 **Verifying [Connectivity](https://neo4j.com/docs/api/python-driver/current/api.html#neo4j.Driver.verify_connectivity)**
 
-This verifies if the driver can establish a reading connection to a remote server or a cluster. Some data will be exchanged. Raises:
-Exception – if the driver cannot connect to the remote. Use the exception to further understand the cause of the connectivity problem.
-Return type: None
+This verifies if the driver can establish a reading connection to a remote server or a cluster. Some data will be exchanged. 
+*Raises: Exception* – if the driver cannot connect to the remote. Use the exception to further understand the cause of the connectivity problem.
+*Return type* None
 
 ```
 # Create an instance of the driver
