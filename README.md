@@ -14,17 +14,9 @@ allowing a very flexible way of thinking about and using it.
 
 ### The property graph model
 
-<img src="https://neo4j.com/docs/getting-started/_images/sample-cypher.svg"/>
+<img src="https://neo4j.com/docs/getting-started/_images/sample-cypher.svg" width='800'/>
 
 In Neo4j, information is organized as nodes, relationships, and properties.
-  - **Nodes** are the entities in the graph.
-    - Nodes can be tagged with labels, representing their different roles in your domain (for example, Person).
-    - Nodes can hold any number of key-value pairs, or properties (for example, name).
-    - Node labels may also attach metadata (such as index or constraint information) to certain nodes.
-  - **Relationships** provide directed, named connections between two node entities (for example, Person LOVES Person).
-    - Relationships always have a direction, a type, a start node, and an end node, and they can have properties, just like nodes.
-    - Nodes can have any number or type of relationships without sacrificing performance.
-    - Although relationships are always directed, they can be navigated efficiently in any direction.
 
 # What is Neo4j?
 
@@ -71,12 +63,13 @@ A graph data structure consists of nodes (discrete objects) that can be connecte
 </p>
 
 The Neo4j property graph database model consists of:
-  - **Nodes** describe entities (discrete objects) of a domain. Nodes can have zero or more labels to define (classify) what kind of nodes they are.
-  
 
-**Nodes**
+**Nodes** are used to represent entities (discrete objects) of a domain.
+    - Nodes can be tagged with labels, representing their different roles in your domain (for example, Person).
+    - Nodes can hold any number of key-value pairs, or properties (for example, name).
+    - Node labels may also attach metadata (such as index or constraint information) to certain nodes.
+    - Nodes can have zero or more labels to define (classify) what kind of nodes they are.
 
-Nodes are used to represent entities (discrete objects) of a domain.
 The simplest possible graph is a single node with no relationships. Consider the following graph, consisting of a single node.
 	
  <p align="center">
@@ -101,13 +94,13 @@ Since labels can be added and removed during runtime, they can also be used to m
 </p>
 
 
-### Relationship
-
-- Describe a connection between a source node and a target node. 
-- Relationships always have a direction (one direction). 
-- Relationships must have a type (one type) to define (classify) what type of relationship they are. 
-- Nodes and relationships can have properties (key-value pairs), which further describe them.
-- It is possible for a node to have a relationship to itself.
+**Relationship** provide directed, named connections between two node entities (for example, Person LOVES Person).
+    - Relationships always have a direction, a type, a start node, and an end node, and they can have properties, just like nodes.
+    - Nodes can have any number or type of relationships without sacrificing performance.
+    - Although relationships are always directed, they can be navigated efficiently in any direction.
+    - Relationships must have a type (one type) to define (classify) what type of relationship they are. 
+    - Nodes and relationships can have properties (key-value pairs), which further describe them.
+    - It is possible for a node to have a relationship to itself.
 
 <p align="center">
   <img src="https://neo4j.com/docs/getting-started/_images/graph_example_relationship-arr.svg"/>
