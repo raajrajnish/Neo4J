@@ -113,3 +113,140 @@ CALL gds.graph.drop('my-graph-projection')
 
 ## Native Projections
 
+There are 2 primary types of projections in GDS, native projections and cypher projections. In summary, native projections are optimized for efficiency and performance to support graph data science at scale. Cypher projections are optimized for flexibility and customization to support exploratory analysis, experimentation, and smaller graph projections.
+
+**About Native Projections**
+
+When you call gds.graph.project() you are using a native projection. Native projections provide the best performance by reading from the Neo4j store files directly. We recommend them for both development and production phases.
+
+The native projection takes three mandatory arguments: graphName, nodeProjection and relationshipProjection. In addition, the optional configuration parameter allows us to further configure the graph creation.
+
+**Basic Native Projections**
+
+Example where we project the User and Movie nodes with the RATED relationship. 
+```
+CALL gds.graph.project('native-proj',['User', 'Movie'], ['RATED']);
+```
+A GRAPH WITH NAME 'NATIVE-PROJ' ALREADY EXISTS.
+```
+CALL gds.graph.drop('native-proj');
+```
+then re run the code
+
+The wildcard character '*' can be used to include all nodes and/or relationships in the database. 
+```
+CALL gds.graph.project('native-proj','*', '*');
+```
+
+## Changing Relationship Orientation
+
+Native projections allow you to change the relationship orientation as well. To accommodate this there are three orientation options we can apply to relationship types in the relationshipProjection:
+  - NATURAL: same direction as in the database (default)
+  - REVERSE: opposite direction as in the database
+  - UNDIRECTED: undirected
+
+```
+CALL gds.graph.drop('native-proj', false);
+
+//replace with a project that has reversed relationship orientation
+CALL gds.graph.project(
+    'native-proj',
+    ['User', 'Movie'],
+    {RATED_BY: {type: 'RATED', orientation: 'REVERSE'}}
+);
+
+CALL gds.degree.mutate('native-proj', {mutateProperty: 'ratingCount'});
+```
+
+we want to count the number of user ratings each movie has. 
+```
+CALL gds.graph.nodeProperty.stream('native-proj','ratingCount', ['Movie'])
+YIELD nodeId, propertyValue
+RETURN gds.util.asNode(nodeId).title AS movieTitle, propertyValue AS ratingCount
+ORDER BY movieTitle DESCENDING LIMIT 5
+```
+
+**Including Node and Relationship Properties**
+
+Node and relationship properties may be useful to consider in graph analytics. They can be used as weights in graph algorithms and features for machine learning.
+```
+CALL gds.graph.drop('native-proj', false);
+
+CALL gds.graph.project(
+    'native-proj',
+    ['User', 'Movie'],
+    {RATED: {orientation: 'UNDIRECTED'}},
+    {
+        nodeProperties:{
+            revenue: {defaultValue: 0}, // (1)
+            budget: {defaultValue: 0},
+            runtime: {defaultValue: 0}
+        },
+        relationshipProperties: ['rating'] // (2)
+    }
+);
+```
+
+**Notes:**
+  - the defaultValue parameter allows us to fill in missing values with a default. In this case we use 0.
+  - simpler syntax with no default values as these should not be missing according to the data model.
+
+## Parallel Relationship Aggregations
+
+The Neo4j database allows you to store multiple relationships of the same type and direction between two nodes. These are colloquially known as parallel relationships. Consider a graph of financial transaction data where users send money to one another. If a user sends money to the same user multiple times this can form multiple parallel relationships.
+
+<img src="https://graphacademy.neo4j.com/courses/gds-product…ve-projections/images/parallell-relationships.png" />
+
+Sometimes you will want to aggregate these parallel relationships into a single relationship in preparation for running graph algorithms or machine learning. 
+Other times we may want to weight the connection between two nodes higher if more parallel relationships exists, but it’s not always easy to do so without aggregating the relationships first depending on which algorithm you use.
+
+```
+CALL gds.graph.project(
+  'user-proj',
+  ['User'],
+  {
+    SENT_MONEY_TO: { aggregation: 'SINGLE' }
+  }
+);
+```
+We can create a property with the count of the relationships as well - like so:
+```
+CALL gds.graph.project(
+  'user-proj',
+  ['User'],
+  {
+    SENT_MONEY_TO: {
+      properties: {
+        numberOfTransactions: {
+          // the wildcard '*' is a placeholder, signaling that
+          // the value of the relationship property is derived
+          // and not based on Neo4j property.
+          property: '*',
+          aggregation: 'COUNT'
+        }
+      }
+    }
+  }
+);
+```
+
+We can also take the sum, min or max of relationship properties during aggregation. Below is an example with sum
+```
+CALL gds.graph.project(
+  'user-proj',
+  ['User'],
+  {
+    SENT_MONEY_TO: {
+      properties: {
+        totalAmount: {
+          property: 'amount',
+          aggregation: 'SUM'
+        }
+      }
+    }
+  }
+);
+```
+
+
+
