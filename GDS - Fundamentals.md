@@ -248,5 +248,33 @@ CALL gds.graph.project(
 );
 ```
 
+# Cypher Projections
+
+While the native projection is scalable and fast, its filtering and aggregation capabilities aren’t as flexible as Cypher.Cypher projections are intended to be used in exploratory analysis and developmental phases where additional flexibility and/or customization is needed.
+
+While Cypher projections offer more flexibility and customization, they have a diminished focus on performance relative to native projections and as a result won’t perform as quickly or as well on larger graphs. This is a key trade-off to keep in mind whenever you consider using Cypher projections.
+
+A Cypher projection takes three mandatory arguments: graphName, nodeQuery, and relationshipQuery. In addition, the optional configuration parameter allows us to further configure graph creation.
+
+**Applied Example**
+
+we wanted to know which actors are the most influential in terms of the number of other actors they have been in recent, high grossing, movies with.
+For the sake of this example, we will call a movie “recent” if it was released on or after 1990, and high-grossing if it had revenue >= $1M.
+
+```
+CALL gds.graph.project.cypher(
+  'proj-cypher',
+  'MATCH (a:Actor) RETURN id(a) AS id, labels(a) AS labels',
+  'MATCH (a1:Actor)-[:ACTED_IN]->(m:Movie)<-[:ACTED_IN]-(a2)
+   WHERE m.year >= 1990 AND m.revenue >= 1000000
+   RETURN id(a1) AS source , id(a2) AS target, count(*) AS actedWithCount, "ACTED_WITH" AS type'
+);
+```
+```
+CALL gds.degree.stream('proj-cypher',{relationshipWeightProperty: 'actedWithCount'})
+YIELD nodeId, score
+RETURN gds.util.asNode(nodeId).name AS name, score
+ORDER BY score DESC LIMIT 10
+```
 
 
