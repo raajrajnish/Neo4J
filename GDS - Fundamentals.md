@@ -52,3 +52,64 @@ Below is diagram illustrating the general workflow in GDS, which breaks out into
     export to disk in csv format, or stream results into another application or downstream workflow.
 
 
+## Graph Catalog
+
+The graph catalog is a concept that allows you to manage graph projections in GDS. This includes
+
+  - creating (a.k.a projecting) graphs
+  - viewing details about graphs
+  - dropping graph projections
+  - exporting graph projections
+  - writing graph projection properties back to the database
+
+How the Graph Catalog Works
+You can call graph catalog operations with commands of the form
+```
+CALL gds.graph.<command>
+```
+
+Example 
+1. we can list the graph projections that currently exist in our database with command ```CALL gds.graph.list()```
+   Creating a projection ```CALL gds.graph.project('my-graph-projection', ['Actor','Movie'], 'ACTED_IN')```. Now run the above command to give the graph projections.
+
+The purpose of creating a projection is to provide a space for running graph algorithms and doing graph data science efficiently.
+
+**Running Algorithms**
+As a simple example of a graph algorithm, we will run degree centrality on Actor nodes. this will count the number of movies each actor was in and store it on a node property called numberOfMoviesActedIn inside the projection (it will not be written back to the database yet).
+```
+CALL gds.degree.mutate('my-graph-projection', {mutateProperty:'numberOfMoviesActedIn'})
+```
+
+**Streaming and Writing Node Properties**
+
+There will be times when we want to take the results from our algorithm calculations and either stream them into another process or write them back to the database.
+```
+CALL gds.graph.nodeProperty.stream('my-graph-projection','numberOfMoviesActedIn')
+YIELD nodeId, propertyValue
+RETURN gds.util.asNode(nodeId).name AS actorName, propertyValue AS numberOfMoviesActedIn
+ORDER BY numberOfMoviesActedIn DESCENDING, actorName LIMIT 10
+```
+If we instead wanted to write the property back to the database we could use the nodeProperties.write operation.
+```
+CALL gds.graph.nodeProperties.write('my-graph-projection',['numberOfMoviesActedIn'], ['Actor'])
+```
+We could then query the top 10 most prolific actors by movie count with Cypher.
+```
+MATCH (a:Actor)
+RETURN a.name, a.numberOfMoviesActedIn
+ORDER BY a.numberOfMoviesActedIn DESCENDING, a.name LIMIT 10
+```
+## Exporting Graphs
+
+The graph catalog has two methods for export:
+  1. gds.graph.export to export a graph into a new database - effectively copying the projection into a separate Neo4j database
+  2. gds.beta.graph.export.csv to export a graph to csv files
+
+## Dropping Graphs
+
+```
+CALL gds.graph.drop('my-graph-projection')
+```
+
+## Native Projections
+
